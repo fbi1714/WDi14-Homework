@@ -2,6 +2,44 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
+class ChildComponent extends React.Component {
+  constructor() {
+    super(); // Inherits all of the functionality from React.Component
+    console.log("ChildComponent: constructor");
+  }
+  componentWillMount() {
+    console.log("ChildComponent: componentWillMount");
+  }
+  render() {
+    console.log("ChildComponent: render");
+    return (
+      <div>
+        <h2>CHILD COMPONENT</h2>
+        <p>this.props.text: {this.props.text}</p>
+      </div>
+    );
+  }
+  componentDidMount() {
+    console.log("ChildComponent: componentDidMount");
+  }
+  componentWillUnmount() {
+    console.log("ChildComponent: componentWillUnmount");
+  }
+  componetWillReceiveProps(nextProps){
+    console.log("ChildComponent: componetWillReceiveProps", nextProps);
+  }
+  shouldComponentUpdate(){
+    console.log("ChildComponent: shouldComponentUpdate");
+    return true;
+  }
+  componentWillUpdate(){
+    console.log("ChildComponent: componentWillUpdate");
+  }
+  componentDidUpdate(){
+    console.log("ChildComponent: componentDidUpdate");
+  }
+}
+
 class ParentComponent extends React.Component{
   constructor(){
     super();
@@ -18,11 +56,14 @@ class ParentComponent extends React.Component{
     console.log("ParentComponent: render");
     return (
       <div className="container">
+      <h2>PARENT COMPONENT</h2>
         <input
           type="text"
           value={this.state.text}
           onChange={ this.handleInputChange } />
-          <h1>{this.state.text}</h1>
+          <p>this.props.text: {this.props.text}</p>
+          <hr />
+          <ChildComponent text={this.state.text} />
       </div>);
   }
   componentDidMount(){
