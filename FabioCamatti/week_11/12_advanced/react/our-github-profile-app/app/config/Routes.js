@@ -11,6 +11,7 @@ const routes = (
     <Route path="/" component={Main}>
       <IndexRoute component={Home} />
       <Route path="/search" component={Search} />
+      <Route path="/details/:username" component={UserDetails} />
     </Route>
   </Router>
 );

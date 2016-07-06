@@ -16,10 +16,11 @@ class Search extends Component {
     });
   }
   handleSubmit(e){
-    var searchQuery = this.state.search;
-    console.log( searchQuery );
+    const searchQuery = this.state.search
+    this.context.router.push( `/details/${this.state.search}`)
   }
   render(){
+    console.log(this);
     return (
       <div>
         <input
@@ -37,6 +38,9 @@ class Search extends Component {
       </div>
     );
   }
+};
+Search.contextTypes = {
+  router: React.PropTypes.object.isRequired
 };
 
 export default Search;
