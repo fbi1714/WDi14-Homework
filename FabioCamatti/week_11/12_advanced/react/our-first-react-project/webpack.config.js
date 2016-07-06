@@ -8,7 +8,7 @@ const HtmlWebpackPluginConfig = new HtmlWebpackPlugin({
 });
 
 module.exports = {
-  entry: ['./app/index.js'],
+  entry: ['./app/lifecyle.js'],
   output: {
     path: __dirname + "/dist",
     filename: "index_bundle.js"

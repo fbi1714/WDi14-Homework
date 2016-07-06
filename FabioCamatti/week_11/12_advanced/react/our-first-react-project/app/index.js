@@ -33,7 +33,7 @@ import ReactDOM from 'react-dom';
 class ShowTodos extends React.Component {
   constructor(){
     console.log("Constructor");
-    super();
+    super(); // inherit everything from React.Component
     // setInitialState life cycle hook
     this.state = {
       loading: true
@@ -73,19 +73,21 @@ ShowTodos.propTypes = {
   num: React.PropTypes.number
 };
 
-class TodosContainer extends React.Component{
-  render(){
-    let todos =  [ "First todo", "Second todo", "Third todo" ];
-    return (
-      <div>
-        <h3>All todos</h3>
-        <ShowTodos todos={todos}/>
-      </div>
-    );
-  }
-};
 
-ReactDOM.render(
-  <TodosContainer />,
-  document.getElementById("app")
-);
+
+// class TodosContainer extends React.Component{
+//   render(){
+//     let todos =  [ "First todo", "Second todo", "Third todo" ];
+//     return (
+//       <div>
+//         <h3>All todos</h3>
+//         <ShowTodos todos={todos}/>
+//       </div>
+//     );
+//   }
+// };
+//
+// ReactDOM.render(
+//   <TodosContainer />,
+//   document.getElementById("app")
+// );
