@@ -63,26 +63,6 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	/*jshint esversion: 6 */
-
-
-	var USER_DATA = {
-	  imageURL: "https://avatars.githubusercontent.com/u/9123421?v=3",
-	  username: "fbi1714",
-	  name: "fbi"
-	};
-
-	// class HelloWorld extends Component{
-	//   render(){
-	//     return (
-	//       <div> Hello World </div>
-	//     );
-	//   }
-	// }
-	//
-	//
-	// ReactDOM.render(<HelloWorld />, document.getElementById("app"));
-
 /***/ },
 /* 2 */
 /***/ function(module, exports, __webpack_require__) {
