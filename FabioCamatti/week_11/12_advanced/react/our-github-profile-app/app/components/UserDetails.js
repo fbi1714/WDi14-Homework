@@ -1,12 +1,12 @@
 /*jshint esversion: 6 */
-import React, { Component } from 'react';
+import React, { Component, PropTypes } from 'react';
 
 class UserDetails extends Component {
   render(){
-    console.log( this );
+    console.log( this.props );
     return (
       <div>
-        Username
+        <h2>{this.props.routeParams.username}</h2>
       </div>
     );
   }
