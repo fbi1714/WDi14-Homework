@@ -15,9 +15,9 @@ class Home extends  Component {
         <h3>Welcome to our Github app</h3>
         <p>This will show a basic Github profile page</p>
         <Link to="/search">
-        <button className="button-primary">
-          Search for a user
-        </button>
+          <button className="button-primary">
+            Search for a user
+          </button>
         </Link>
         &nbsp;
         <button className="button-primary" onClick={this.pickRandomStudent.bind(this)}>

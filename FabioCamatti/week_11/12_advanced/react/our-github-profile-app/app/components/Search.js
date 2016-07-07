@@ -16,8 +16,8 @@ class Search extends Component {
     });
   }
   handleSubmit(e){
-    const searchQuery = this.state.search
-    this.context.router.push( `/details/${this.state.search}`)
+    const searchQuery = this.state.search;
+    this.context.router.push( `/details/${this.state.search}`);
   }
   render(){
     console.log(this);
