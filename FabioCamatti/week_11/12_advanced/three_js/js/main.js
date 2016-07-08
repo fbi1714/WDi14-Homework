@@ -1,24 +1,23 @@
 var app = app || {};
+app.step = 0;
+app.bouncingSpeed = 0.02;
 
-app.step = 0.02;
-app.bouncingSpeed = 0.04;
+app.controller = new function () {
+  this.rotationSpeed = 0.02;
+  this.bouncingSpeed = 0.02;
+};
 
 app.animate = function () {
   app.stats.update();
 
+  app.step += app.controller.bouncingSpeed;
+  // app.sphere.position.x = 20 + (10 *(Math.cos(app.step)));
+  // app.sphere.position.x = 20 + (10 *(Math.tan(app.step))); //IMPORTANT => Nice effect
+  app.sphere.position.y = 2 + (10 * (Math.abs(Math.cos(app.step))));
 
-  app.step += app.bouncingSpeed;
-  app.sphere.position.x = 20 + (10 *(Math.sin(app.step)));
-  app.sphere.position.y = 2 + (10 *(Math.abs(Math.sin(app.step))));
-  app.sphere.position.z = 2 + (10 *(Math.abs(Math.cos(app.step))));
-
-  app.cube.position.x = 20 + (10 *(Math.cos(app.step)));
-  app.cube.position.y = 2 + (10 *(Math.abs(Math.sin(app.step))));
-  app.cube.position.z = 2 + (10 *(Math.abs(Math.sin(app.step))));
-
-  app.cube.rotation.x += 0.01;
-  app.cube.rotation.y += 0.01;
-  app.cube.rotation.z += 0.01;
+  app.cube.rotation.x += app.controller.rotationSpeed;
+  app.cube.rotation.y += app.controller.rotationSpeed;
+  app.cube.rotation.z += app.controller.rotationSpeed;
 
   requestAnimationFrame( app.animate );
   app.renderer.render( app.scene, app.camera );
@@ -35,88 +34,94 @@ app.addStats = function () {
   return stats;
 };
 
-app.init = function() {
-    app.scene = new THREE.Scene();
-    app.width = window.innerWidth;
-    app.height = window.innerHeight;
+app.init = function () {
+  app.scene = new THREE.Scene();
+  app.width = window.innerWidth;
+  app.height = window.innerHeight;
 
-    app.camera = new THREE.PerspectiveCamera(45, app.width / app.height, 0.1, 1000);
+  app.camera = new THREE.PerspectiveCamera(45, app.width / app.height, 0.1, 1000 );
+  app.camera.position.x = -30;
+  app.camera.position.y = 40;
+  app.camera.position.z = 30;
+  app.camera.lookAt( app.scene.position );
 
-    app.camera.position.x = -30;
-    app.camera.position.y = 40;
-    app.camera.position.z = 30;
-    app.camera.lookAt(app.scene.position);
+  app.renderer = new THREE.WebGLRenderer();
+  app.renderer.shadowMap.enabled = true;
+  app.renderer.setPixelRatio( window.devicePixelRatio || 1 );
+  app.renderer.setSize( app.width, app.height );
+  app.renderer.setClearColor( 0xECEFF1 ); // "#ECEFF1"
 
+  // app.axes = new THREE.AxisHelper( 40 );
+  // app.scene.add( app.axes );
 
+  var planeGeometry = new THREE.PlaneGeometry(60, 20);
+  var planeMaterial = new THREE.MeshLambertMaterial({
+    color: 0xCFD8DC
+  });
+  app.plane = new THREE.Mesh(planeGeometry, planeMaterial);
+  app.plane.rotation.x = -0.5 * Math.PI;
+  app.plane.position.x = 15;
+  app.plane.position.y = -2;
+  app.plane.position.z = 0;
+  app.plane.receiveShadow = true;
+  app.scene.add(app.plane);
 
-    console.log("App started");
+  var cubeGeometry = new THREE.BoxGeometry(4, 4, 4);
+  var cubeMaterial = new THREE.MeshLambertMaterial({
+    color: 0xFF8F00,
+    // wireframe: true
+  });
+  app.cube = new THREE.Mesh( cubeGeometry, cubeMaterial );
+  app.cube.position.x = -4;
+  app.cube.position.y = 3;
+  app.cube.position.z = 0;
+  app.cube.castShadow = true;
+  app.scene.add( app.cube );
 
-    app.renderer = new THREE.WebGLRenderer();
+  var sphereGeometry = new THREE.SphereGeometry(4, 30, 30);
+  var sphereMaterial = new THREE.MeshLambertMaterial({
+    color: 0x039BE5,
+    // wireframe: true
+  });
+  app.sphere = new THREE.Mesh( sphereGeometry, sphereMaterial );
+  app.sphere.position.x = 10;
+  app.sphere.position.y = 0;
+  app.sphere.position.z = 0;
+  app.sphere.castShadow = true;
+  app.scene.add( app.sphere );
 
+  app.pointLight = new THREE.PointLight( 0xFFFFFF );
+  app.pointLight.position.set( 15, 30, 10 );
+  app.pointLight.castShadow = true;
+  app.pointLight.shadow.mapSize.width = 4096
+  app.pointLight.shadow.mapSize.height = 4096
+  app.pointLight.shadow.camera.near = 1;
+  app.pointLight.shadow.camera.far = 50;
+  app.scene.add( app.pointLight );
 
+  app.controls = new THREE.OrbitControls( app.camera, app.renderer.domElement );
 
-    app.renderer.setSize(app.width, app.height);
-    app.renderer.setClearColor(0xECEFF1);
-    "#ECEFF1"
+  var target = document.getElementById("output");
+  target.appendChild( app.renderer.domElement );
+  app.renderer.render( app.scene, app.camera );
 
-    app.axes = new THREE.AxisHelper(40);
-    app.scene.add(app.axes);
+  app.stats = app.addStats();
+  app.animate();
 
-    var planeGeometry = new THREE.PlaneGeometry(60, 20);
-    var planeMaterial = new THREE.MeshLambertMaterial({
-        color: 0xCDF8DC
-    });
-
-    app.plane = new THREE.Mesh(planeGeometry, planeMaterial);
-    app.plane.rotation.x = -0.5 * Math.PI;
-    app.plane.position.x = 10;
-    app.plane.position.y = -2;
-    app.plane.position.z = 0;
-    app.plane.receiveShadow = true;
-    app.scene.add(app.plane);
-
-    var cubeGeometry = new THREE.BoxGeometry(4, 4, 4);
-    var cubeMaterial = new THREE.MeshLambertMaterial({
-      color: 0xFF8F00,
-      // wireframe: true
-    });
-    app.cube = new THREE.Mesh( cubeGeometry, cubeMaterial );
-    app.cube.position.x = -4;
-    app.cube.position.y = 3;
-    app.cube.position.z = 0;
-    app.cube.castShadow = true;
-    app.scene.add( app.cube );
-
-    var sphereGeometry = new THREE.SphereGeometry( 6, 30, 30 );
-    var sphereMaterial = new THREE.MeshLambertMaterial({
-      color: 0x039BE5,
-      // wireframe: true
-    });
-
-    app.sphere = new THREE.Mesh( sphereGeometry, sphereMaterial );
-    app.sphere.position.x = 15;
-    app.sphere.position.y = 10;
-    app.sphere.position.z = 15;
-    app.sphere.castShadow = true;
-    app.scene.add( app.sphere );
-
-    app.pointLight = new THREE.PointLight( 0xFFFFFF );
-    app.pointLight.position.set( 150, 1000, 300);
-    app.scene.add( app.pointLight );
-
-    app.helper = new THREE.CameraHelper( app.pointLight.shadow.camera );
-    app.scene.add( app.helper );
-
-    app.controls = new THREE.OrbitControls( app.camera, app.renderer.domElement );
-
-
-    var target = document.getElementById("output");
-    target.appendChild(app.renderer.domElement);
-    app.renderer.render(app.scene, app.camera);
-
-    app.stats = app.addStats();
-    app.animate();
+  app.gui = new dat.GUI();
+  app.gui.add(app.controller, 'rotationSpeed', 0, 0.2);
+  app.gui.add(app.controller, 'bouncingSpeed', 0, 0.2);
 };
 
-// IMPORTANT LINE OF CODE TO LEARN AND KEEP IN MIND
+//VERY IMPORTANT LINE OF CODE TO BE REMEMBERED.
 window.onload = app.init;
+
+app.resize = function () {
+  app.width = window.innerWidth;
+  app.height = window.innerHeight;
+  app.camera.aspect = app.width / app.height;
+  app.camera.updateProjectionMatrix();
+  app.renderer.setSize(app.width, app.height);
+};
+
+window.addEventListener("resize", app.resize);
